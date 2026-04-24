@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff3c3c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Warrior V3">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Sumit's Warrior Training V3</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06060f;--card:#0d0d1c;--border:#16162a;--accent:#ff3c3c;--accent2:#ff8c00;--gold:#ffd700;--text:#e8e8f0;--muted:#44445a;--green:#00ff88;--blue:#00aaff;--spine:#a855f7;--spine2:#ec4899;--katana:#00e5ff;--leg:#39ff14;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 10% 10%,rgba(255,60,60,0.06) 0%,transparent 40%),radial-gradient(ellipse at 90% 90%,rgba(168,85,247,0.05) 0%,transparent 40%);pointer-events:none;z-index:0;}
+.container{max-width:940px;margin:0 auto;padding:16px;position:relative;z-index:1;}
+header{text-align:center;padding:24px 0 18px;border-bottom:1px solid var(--border);margin-bottom:18px;position:relative;}
+header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--gold),transparent);}
+.logo-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.logo-img{width:62px;height:62px;border-radius:14px;box-shadow:0 0 20px rgba(0,229,255,0.4);}
+.logo{font-family:'Bebas Neue',cursive;font-size:clamp(1.8rem,6vw,3rem);letter-spacing:4px;background:linear-gradient(135deg,var(--accent),var(--accent2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:glow 3s ease-in-out infinite alternate;}
+@keyframes glow{from{filter:drop-shadow(0 0 8px rgba(255,60,60,0.4))}to{filter:drop-shadow(0 0 22px rgba(255,140,0,0.5))}}
+.tagline{font-size:0.7rem;color:var(--muted);letter-spacing:3px;margin-top:4px;font-family:'Share Tech Mono',monospace;}
+.version-badge{display:inline-block;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.35);color:var(--katana);font-size:0.6rem;padding:2px 10px;border-radius:4px;letter-spacing:2px;margin-top:6px;font-family:'Share Tech Mono',monospace;}
+.streak-bar{display:flex;justify-content:center;gap:6px;margin:12px 0;flex-wrap:wrap;}
+.streak-stat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;text-align:center;min-width:74px;}
+.streak-stat .val{font-family:'Bebas Neue',cursive;font-size:1.6rem;color:var(--accent);line-height:1;}
+.streak-stat .lbl{font-size:0.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.weekly-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px;}
+.week-cell{aspect-ratio:1;border-radius:6px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.52rem;color:var(--muted);cursor:pointer;transition:all 0.2s;font-family:'Share Tech Mono',monospace;}
+.week-cell:hover{border-color:var(--accent);color:var(--text);}
+.week-cell.today{border-color:var(--accent);color:var(--accent);}
+.week-cell.completed{background:rgba(0,255,136,0.07);border-color:var(--green);color:var(--green);}
+.week-cell .day-dot{font-size:0.85rem;}
+.nav-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;}
+.nav-tab{flex:1;min-width:65px;padding:7px 3px;background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:6px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;text-align:center;transition:all 0.2s;}
+.nav-tab:hover{border-color:var(--accent);color:var(--text);}
+.nav-tab.active{background:var(--accent);border-color:var(--accent);color:white;}
+.nav-tab.spine-tab.active{background:linear-gradient(135deg,var(--spine),var(--spine2));border-color:var(--spine);}
+.nav-tab.katana-tab.active{background:linear-gradient(135deg,#006080,var(--katana));border-color:var(--katana);color:#000;}
+.nav-tab.leg-tab.active{background:linear-gradient(135deg,#004d00,var(--leg));border-color:var(--leg);color:#000;}
+.day-tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none;}
+.day-tabs::-webkit-scrollbar{display:none;}
+.day-tab{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:6px 11px;border-radius:6px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.72rem;letter-spacing:1px;white-space:nowrap;transition:all 0.2s;flex-shrink:0;}
+.day-tab:hover{border-color:var(--accent);color:var(--text);}
+.day-tab.active{background:var(--accent);border-color:var(--accent);color:white;}
+.day-tab.rest-tab.active{background:var(--blue);border-color:var(--blue);}
+.panel{display:none;animation:fadeIn 0.3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.section-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.section-icon.spine-icon{background:linear-gradient(135deg,var(--spine),var(--spine2));}
+.section-icon.katana-icon{background:linear-gradient(135deg,#003040,var(--katana));}
+.section-icon.leg-icon{background:linear-gradient(135deg,#002200,var(--leg));}
+.section-title{font-family:'Bebas Neue',cursive;font-size:1.4rem;letter-spacing:2px;}
+.section-subtitle{font-size:0.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;}
+.time-alloc{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:5px;margin-bottom:14px;}
+.time-block{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 8px;text-align:center;}
+.time-block .t-mins{font-family:'Bebas Neue',cursive;font-size:1.3rem;line-height:1;}
+.time-block .t-label{font-size:0.58rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-top:2px;}
+.time-block.warmup{border-color:rgba(255,140,0,0.3);} .time-block.warmup .t-mins{color:var(--accent2);}
+.time-block.main{border-color:rgba(255,60,60,0.3);} .time-block.main .t-mins{color:var(--accent);}
+.time-block.spine-t{border-color:rgba(168,85,247,0.3);} .time-block.spine-t .t-mins{color:var(--spine);}
+.time-block.leg-t{border-color:rgba(57,255,20,0.3);} .time-block.leg-t .t-mins{color:var(--leg);}
+.time-block.cooldown{border-color:rgba(0,170,255,0.3);} .time-block.cooldown .t-mins{color:var(--blue);}
+.time-block.katana{border-color:rgba(0,229,255,0.3);} .time-block.katana .t-mins{color:var(--katana);}
+.exercise-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.exercise-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;}
+.exercise-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transition:transform 0.25s;}
+.exercise-card.spine-card::before{background:var(--spine);}
+.exercise-card.katana-card::before{background:var(--katana);}
+.exercise-card.leg-card::before{background:var(--leg);}
+.exercise-card:hover{transform:translateX(4px);}
+.exercise-card:hover::before,.exercise-card.done::before{transform:scaleY(1);}
+.exercise-card.done{border-color:var(--green);background:rgba(0,255,136,0.04);}
+.exercise-card.done::before{background:var(--green);}
+.ex-check{width:23px;height:23px;border:2px solid var(--muted);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.25s;font-size:0.75rem;}
+.exercise-card.done .ex-check{background:var(--green);border-color:var(--green);color:#000;}
+.ex-info{flex:1;min-width:0;}
+.ex-name{font-weight:700;font-size:0.9rem;color:var(--text);}
+.ex-detail{font-size:0.67rem;color:var(--muted);margin-top:1px;font-family:'Share Tech Mono',monospace;}
+.ex-tip{font-size:0.63rem;color:#2a2a45;margin-top:2px;}
+.exercise-card.done .ex-tip{color:#1a4a2a;}
+.ex-badge{font-size:0.58rem;padding:2px 5px;border-radius:4px;font-family:'Share Tech Mono',monospace;letter-spacing:1px;text-transform:uppercase;flex-shrink:0;}
+.badge-strength{background:rgba(255,60,60,0.1);color:var(--accent);border:1px solid rgba(255,60,60,0.2);}
+.badge-cardio{background:rgba(255,140,0,0.1);color:var(--accent2);border:1px solid rgba(255,140,0,0.2);}
+.badge-martial{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid rgba(255,215,0,0.2);}
+.badge-core{background:rgba(0,170,255,0.1);color:var(--blue);border:1px solid rgba(0,170,255,0.2);}
+.badge-spine{background:rgba(168,85,247,0.1);color:var(--spine);border:1px solid rgba(168,85,247,0.2);}
+.badge-katana{background:rgba(0,229,255,0.1);color:var(--katana);border:1px solid rgba(0,229,255,0.2);}
+.badge-leg{background:rgba(57,255,20,0.1);color:var(--leg);border:1px solid rgba(57,255,20,0.2);}
+.phase-label{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;padding:4px 0;color:var(--muted);border-bottom:1px solid var(--border);margin-bottom:5px;margin-top:9px;}
+.phase-label:first-child{margin-top:0;}
+.phase-label.p-warmup{color:var(--accent2);border-color:rgba(255,140,0,0.2);}
+.phase-label.p-spine{color:var(--spine);border-color:rgba(168,85,247,0.2);}
+.phase-label.p-main{color:var(--accent);border-color:rgba(255,60,60,0.2);}
+.phase-label.p-leg{color:var(--leg);border-color:rgba(57,255,20,0.2);}
+.phase-label.p-katana{color:var(--katana);border-color:rgba(0,229,255,0.2);}
+.phase-label.p-cooldown{color:var(--blue);border-color:rgba(0,170,255,0.2);}
+.progress-section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:12px;}
+.progress-label{display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;font-family:'Share Tech Mono',monospace;}
+.progress-bar{height:4px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:3px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);}
+.progress-fill.spine-fill{background:linear-gradient(90deg,var(--spine),var(--spine2));}
+.progress-fill.leg-fill{background:linear-gradient(90deg,#004400,var(--leg));}
+.progress-fill.katana-fill{background:linear-gradient(90deg,#003040,var(--katana));}
+.timer-section{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:12px;text-align:center;}
+.timer-label{font-size:0.62rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:5px;}
+.timer-display{font-family:'Bebas Neue',cursive;font-size:3rem;color:var(--accent);letter-spacing:4px;line-height:1;transition:color 0.3s;}
+.timer-display.running{color:var(--green);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.timer-btns{display:flex;gap:5px;justify-content:center;margin-top:9px;flex-wrap:wrap;}
+.btn{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;}
+.btn-primary{background:var(--accent);color:white;}
+.btn-primary:hover{filter:brightness(1.2);}
+.btn-secondary{background:var(--border);color:var(--text);}
+.btn-blue{background:rgba(0,170,255,0.12);color:var(--blue);border:1px solid rgba(0,170,255,0.25);}
+.complete-day-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:white;font-family:'Bebas Neue',cursive;font-size:1.1rem;letter-spacing:3px;cursor:pointer;transition:all 0.3s;margin-top:7px;}
+.complete-day-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,60,60,0.3);}
+.complete-day-btn:disabled{background:linear-gradient(135deg,var(--green),#00cc66);cursor:default;transform:none;}
+.rest-card{background:var(--card);border:1px solid var(--blue);border-radius:12px;padding:22px;text-align:center;}
+.rest-emoji{font-size:2rem;margin-bottom:7px;}
+.rest-title{font-family:'Bebas Neue',cursive;font-size:1.6rem;color:var(--blue);letter-spacing:3px;}
+.rest-text{color:var(--muted);margin-top:7px;font-size:0.85rem;line-height:1.7;}
+.rest-tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-top:12px;}
+.rest-tip{background:rgba(0,170,255,0.06);border:1px solid rgba(0,170,255,0.15);border-radius:8px;padding:8px;font-size:0.78rem;color:var(--text);}
+.rest-tip span{display:block;font-size:1rem;margin-bottom:2px;}
+.info-card{border-radius:10px;padding:13px 15px;margin-bottom:12px;}
+.info-card.spine-c{background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.2);}
+.info-card.katana-c{background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.2);}
+.info-card.leg-c{background:rgba(57,255,20,0.05);border:1px solid rgba(57,255,20,0.2);}
+.info-card-title{font-family:'Bebas Neue',cursive;font-size:0.95rem;letter-spacing:2px;margin-bottom:5px;}
+.info-card.spine-c .info-card-title{color:var(--spine);}
+.info-card.katana-c .info-card-title{color:var(--katana);}
+.info-card.leg-c .info-card-title{color:var(--leg);}
+.info-card p{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+.quote-box{background:var(--card);border-left:3px solid var(--gold);padding:9px 13px;border-radius:0 8px 8px 0;margin-bottom:12px;font-style:italic;color:var(--muted);font-size:0.82rem;}
+.posture-rule{background:rgba(0,170,255,0.05);border:1px solid rgba(0,170,255,0.15);border-radius:10px;padding:11px 13px;margin-bottom:7px;}
+.posture-rule-title{font-family:'Bebas Neue',cursive;font-size:0.9rem;color:var(--blue);letter-spacing:1px;margin-bottom:3px;}
+.posture-rule p{font-size:0.8rem;color:var(--muted);line-height:1.5;}
+@media(max-width:600px){.nav-tab{font-size:0.6rem;padding:6px 2px;}.timer-display{font-size:2.5rem;}.streak-stat{min-width:62px;}.time-alloc{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="logo-row">
+    <svg class="logo-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <defs>
+        <radialGradient id="bg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0d0d2a"/><stop offset="100%" stop-color="#06060f"/></radialGradient>
+        <linearGradient id="b1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fff"/><stop offset="40%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#0088aa"/></linearGradient>
+        <linearGradient id="b2" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff"/><stop offset="40%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#0088aa"/></linearGradient>
+        <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff3c3c"/><stop offset="50%" stop-color="#ff8c00"/><stop offset="100%" stop-color="#ffd700"/></linearGradient>
+        <filter id="gl"><feGaussianBlur stdDeviation="6" result="cb"/><feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+      <circle cx="256" cy="256" r="248" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.3"/>
+      <g filter="url(#gl)" opacity="0.9">
+        <polygon points="95,95 108,82 390,350 380,368" fill="url(#b1)"/>
+        <line x1="95" y1="95" x2="388" y2="358" stroke="white" stroke-width="1" opacity="0.8"/>
+        <ellipse cx="155" cy="155" rx="18" ry="8" fill="#ffd700" transform="rotate(45 155 155)" opacity="0.9"/>
+      </g>
+      <g filter="url(#gl)" opacity="0.9">
+        <polygon points="417,95 404,82 122,350 132,368" fill="url(#b2)"/>
+        <line x1="417" y1="95" x2="124" y2="358" stroke="white" stroke-width="1" opacity="0.8"/>
+        <ellipse cx="357" cy="155" rx="18" ry="8" fill="#ffd700" transform="rotate(-45 357 155)" opacity="0.9"/>
+      </g>
+      <circle cx="256" cy="224" r="5" fill="white" opacity="0.6" filter="url(#gl)"/>
+      <text x="256" y="410" font-family="Georgia,serif" font-size="110" font-weight="bold" text-anchor="middle" fill="url(#tg)" letter-spacing="-4">V3</text>
+      <text x="256" y="468" font-family="serif" font-size="28" text-anchor="middle" fill="#00e5ff" opacity="0.6" letter-spacing="2">武　訓練</text>
+    </svg>
+    <div class="logo">Warrior Training</div>
+  </div>
+  <div class="tagline">Sumit · 17yrs · Home Training · No Equipment</div>
+  <div class="version-badge">V3 — KATANA · TAEKWONDO · SPINE · LEG</div>
+</header>
+
+<div class="streak-bar">
+  <div class="streak-stat"><div class="val" id="streakCount">0</div><div class="lbl">🔥 Streak</div></div>
+  <div class="streak-stat"><div class="val" id="totalDone">0</div><div class="lbl">✅ Done</div></div>
+  <div class="streak-stat"><div class="val" id="spineScore">0</div><div class="lbl">🦴 Spine</div></div>
+  <div class="streak-stat"><div class="val" id="xpCount">0</div><div class="lbl">⚡ XP</div></div>
+</div>
+
+<div class="weekly-grid" id="weeklyGrid"></div>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="switchPanel('workout')">⚔️ Workout</div>
+  <div class="nav-tab spine-tab" onclick="switchPanel('spine')">🦴 Spine</div>
+  <div class="nav-tab leg-tab" onclick="switchPanel('leg')">🦵 Leg</div>
+  <div class="nav-tab katana-tab" onclick="switchPanel('katana')">🗡️ Katana</div>
+  <div class="nav-tab" onclick="switchPanel('posture')">📋 Posture</div>
+</div>
+
+<div class="panel active" id="panel-workout">
+  <div class="day-tabs" id="dayTabs"></div>
+  <div id="workoutContent"></div>
+</div>
+
+<div class="panel" id="panel-spine">
+  <div class="info-card spine-c"><div class="info-card-title">🦴 Daily Spine Correction</div><p>Weak core, tight hip flexors, and weak glutes cause excess lower back curve. At 17 this is 100% correctable. Do every day — 15 minutes only.</p></div>
+  <div class="progress-section"><div class="progress-label"><span>Spine Progress</span><span id="spineProgressPct">0%</span></div><div class="progress-bar"><div class="progress-fill spine-fill" id="spineProgressFill" style="width:0%"></div></div></div>
+  <div class="exercise-list" id="spineExList"></div>
+  <div class="timer-section"><div class="timer-label">⏱ Hold / Rest Timer</div><div class="timer-display" id="spineTimerDisplay">00:00</div><div class="timer-btns"><button class="btn btn-blue" onclick="setT('spine',20)">20s</button><button class="btn btn-blue" onclick="setT('spine',30)">30s</button><button class="btn btn-blue" onclick="setT('spine',45)">45s</button><button class="btn btn-blue" onclick="setT('spine',60)">60s</button><button class="btn btn-primary" onclick="toggleT('spine')" id="spineTimerBtn">START</button><button class="btn btn-secondary" onclick="resetT('spine')">RESET</button></div></div>
+  <button class="complete-day-btn" id="completeSpineBtn" onclick="completeSpine()" style="background:linear-gradient(135deg,var(--spine),var(--spine2))">🦴 MARK SPINE COMPLETE</button>
+</div>
+
+<div class="panel" id="panel-leg">
+  <div class="info-card leg-c"><div class="info-card-title">🦵 Leg Growth Protocol</div><p>You're 17 — growth plates still open. Dead hangs, stretching, calf raises, and nutrition maximize natural growth. Do every morning — 10 minutes.</p></div>
+  <div class="info-card" style="background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);margin-bottom:12px;"><div class="info-card-title" style="color:var(--gold);font-family:'Bebas Neue',cursive;font-size:0.9rem;letter-spacing:2px;margin-bottom:5px;">⚡ Daily Growth Rules</div><p style="font-size:0.78rem;color:var(--muted);line-height:1.6;">🌅 20 min morning sunlight · 🥛 Milk + curd + paneer · 😴 Sleep by 10:30 PM · 💧 3L water · 🍌 Banana + nuts daily</p></div>
+  <div class="progress-section"><div class="progress-label"><span>Leg Progress</span><span id="legProgressPct">0%</span></div><div class="progress-bar"><div class="progress-fill leg-fill" id="legProgressFill" style="width:0%"></div></div></div>
+  <div class="exercise-list" id="legExList"></div>
+  <div class="timer-section"><div class="timer-label">⏱ Hold / Rest Timer</div><div class="timer-display" id="legTimerDisplay">00:00</div><div class="timer-btns"><button class="btn btn-blue" onclick="setT('leg',20)">20s</button><button class="btn btn-blue" onclick="setT('leg',30)">30s</button><button class="btn btn-blue" onclick="setT('leg',45)">45s</button><button class="btn btn-blue" onclick="setT('leg',60)">60s</button><button class="btn btn-primary" onclick="toggleT('leg')" id="legTimerBtn">START</button><button class="btn btn-secondary" onclick="resetT('leg')">RESET</button></div></div>
+  <button class="complete-day-btn" id="completeLegBtn" onclick="completeLeg()" style="background:linear-gradient(135deg,#003300,var(--leg));color:#000;">🦵 MARK LEG COMPLETE</button>
+</div>
+
+<div class="panel" id="panel-katana">
+  <div class="info-card katana-c"><div class="info-card-title">🗡️ Katana Body Training</div><p>Katana requires core rotation, wrist strength, balance, and precision. Do 3x per week alongside main workout.</p></div>
+  <div class="progress-section"><div class="progress-label"><span>Katana Progress</span><span id="katanaProgressPct">0%</span></div><div class="progress-bar"><div class="progress-fill katana-fill" id="katanaProgressFill" style="width:0%"></div></div></div>
+  <div class="exercise-list" id="katanaExList"></div>
+  <div class="timer-section"><div class="timer-label">⏱ Hold / Rest Timer</div><div class="timer-display" id="katanaTimerDisplay">00:00</div><div class="timer-btns"><button class="btn btn-blue" onclick="setT('katana',20)">20s</button><button class="btn btn-blue" onclick="setT('katana',30)">30s</button><button class="btn btn-blue" onclick="setT('katana',45)">45s</button><button class="btn btn-blue" onclick="setT('katana',60)">60s</button><button class="btn btn-primary" onclick="toggleT('katana')" id="katanaTimerBtn">START</button><button class="btn btn-secondary" onclick="resetT('katana')">RESET</button></div></div>
+  <button class="complete-day-btn" id="completeKatanaBtn" onclick="completeKatana()" style="background:linear-gradient(135deg,#003040,var(--katana));color:#000;">🗡️ MARK KATANA COMPLETE</button>
+</div>
+
+<div class="panel" id="panel-posture">
+  <div class="section-header"><div class="section-icon" style="background:linear-gradient(135deg,var(--blue),var(--green))">📋</div><div><div class="section-title">Daily Posture Rules</div><div class="section-subtitle">Follow every single day</div></div></div>
+  <div id="postureList"></div>
+</div>
+</div>
+
+<script>
+const SPINE_EX=[{name:"Dead Bug",detail:"3×10 each side | 45s rest",tip:"Lower back flat on floor. Opposite arm+leg extend slowly."},{name:"Bird Dog",detail:"3×10 each side | 45s rest",tip:"Hands+knees. Extend opposite arm+leg. Hold 2s."},{name:"Glute Bridge",detail:"4×20 reps | 45s rest",tip:"Squeeze glutes hard at top. Hold 2s. Fixes APT."},{name:"Cat-Cow Stretch",detail:"3×10 slow reps | 30s rest",tip:"Arch up, drop. Breathe deeply each rep."},{name:"Child's Pose Hold",detail:"3×30s | 20s rest",tip:"Arms forward, sit back on heels."},{name:"Hip Flexor Stretch",detail:"3×30s each side | 20s rest",tip:"Back knee on floor. Push hips FORWARD. KEY exercise."},{name:"Pelvic Tilt",detail:"3×15 reps | 30s rest",tip:"Lie on back. Flatten lower back into floor. Hold 3s."},{name:"Wall Angels",detail:"3×10 reps | 45s rest",tip:"Entire back flat on wall. Arms slide slowly up."}];
+const LEG_EX=[{name:"Dead Hang",detail:"3×30s | 30s rest",tip:"Hang fully relaxed. Decompresses spine. Maximizes height."},{name:"Calf Raises",detail:"4×25 reps | 30s rest",tip:"Full range — heels down, up on tiptoe."},{name:"Jump Squats",detail:"3×15 reps | 45s rest",tip:"Explosive jump, soft landing. Stimulates growth hormone."},{name:"Hamstring Stretch",detail:"3×30s each leg | 20s rest",tip:"One foot elevated. Lean forward gently."},{name:"Quad Stretch",detail:"3×30s each leg | 20s rest",tip:"Stand on one leg, pull heel to glutes."},{name:"Hip Flexor Stretch",detail:"3×30s each side | 20s rest",tip:"Push hips forward. Releases growth-inhibiting tightness."},{name:"Splits Progression",detail:"2×60s | 30s rest",tip:"Go as far as comfortable. Improve 1cm per week."},{name:"Tippy Toe Walk",detail:"3×30s | 20s rest",tip:"Walk on tiptoes. Strengthens lower leg and ankle."}];
+const KATANA_EX=[{name:"Wrist Circles",detail:"3×20 each direction | 20s rest",tip:"Full slow circles. Non-negotiable before kata."},{name:"Wrist Curls (bottle)",detail:"4×20 reps | 30s rest",tip:"Forearm on knee, curl wrist. Primary grip builder."},{name:"Reverse Wrist Curls",detail:"4×15 reps | 30s rest",tip:"Curl downward. Balances wrist strength."},{name:"Slow Kata",detail:"4×2 min | 60s rest",tip:"Slow precise movements. Visualize sword path."},{name:"Core Rotation",detail:"3×20 each side | 45s rest",tip:"Arms extended, rotate torso. Primary katana power source."},{name:"Single Leg Balance",detail:"3×30s each leg | 20s rest",tip:"Eyes forward, core tight. Katana footwork."},{name:"Plank Hold",detail:"4×40s | 45s rest",tip:"Flat back. Foundation of every katana stance."},{name:"Superman Hold",detail:"3×10 reps | 45s rest",tip:"Lift chest+legs. Posterior chain for sword draws."},{name:"Farmer's Carry",detail:"3×30s walk | 30s rest",tip:"Heavy bottles at sides. Grip + forearm + posture."}];
+const POSTURE_RULES=[{icon:"💻",title:"Phone & Screen",rule:"Hold phone at eye level. Never look down for extended periods."},{icon:"🪑",title:"Sitting",rule:"Both feet flat. Back straight. Pillow behind lower back if needed."},{icon:"😴",title:"Sleeping",rule:"Sleep on back or side — never on stomach."},{icon:"🎮",title:"Gaming",rule:"Sit upright. Set 30-minute alarm — stand and stretch every 30 mins."},{icon:"🚶",title:"Walking",rule:"Head up, chin tucked, shoulders back and down. Core lightly engaged."},{icon:"⏰",title:"Hourly Stretch",rule:"Every hour: 5 cat-cows + hip flexor stretch. 2 minutes. Non-negotiable."},{icon:"🦷",title:"Mewing",rule:"Tongue flat on roof of mouth at all times. Lips sealed. 24/7 habit."},{icon:"👟",title:"Footwear",rule:"Avoid flat flip-flops for long walking. Slight heel support protects spine."}];
+const DAYS=[
+{name:"MON",full:"Monday",focus:"Upper Body + Spine",icon:"💪",type:"strength",quote:"Every rep is a step toward becoming the warrior you want to be.",timeAlloc:[{label:"Warm-Up",mins:"5",cls:"warmup"},{label:"Main Work",mins:"25",cls:"main"},{label:"Spine Fix",mins:"10",cls:"spine-t"},{label:"Cooldown",mins:"5",cls:"cooldown"}],exercises:[{phase:"p-warmup",phaseLabel:"⏱ WARM-UP — 5 MIN"},{name:"Jumping Jacks",detail:"2×30s | 20s rest",badge:"cardio",tip:"Light warm-up. Full arm extension."},{name:"Arm Circles + Neck Rolls",detail:"1×60s",badge:"cardio",tip:"Loosen shoulders and neck."},{phase:"p-main",phaseLabel:"💪 UPPER BODY — 25 MIN"},{name:"Push-Ups",detail:"4×12 | 50s rest",badge:"strength",tip:"Chest to floor. Body straight."},{name:"Wide Push-Ups",detail:"3×10 | 50s rest",badge:"strength",tip:"Hands wider. Targets chest."},{name:"Pike Push-Ups",detail:"3×8 | 50s rest",badge:"strength",tip:"Inverted V. Targets shoulders."},{name:"Diamond Push-Ups",detail:"3×8 | 50s rest",badge:"strength",tip:"Diamond hands. Targets triceps."},{name:"Shoulder Taps",detail:"3×20 taps | 40s rest",badge:"core",tip:"Tap opposite shoulder. Hips level."},{phase:"p-spine",phaseLabel:"🦴 SPINE FIX — 10 MIN"},{name:"Superman Hold",detail:"3×10 | 40s rest",badge:"spine",tip:"Lift chest+legs. Hold 2s."},{name:"Wall Angels",detail:"3×10 | 40s rest",badge:"spine",tip:"Back flat on wall. Arms slide up."},{phase:"p-cooldown",phaseLabel:"🌊 COOLDOWN — 5 MIN"},{name:"Chest Stretch",detail:"Hold 30s each side",badge:"core",tip:"Open chest. Release tension."},{name:"Cat-Cow Stretch",detail:"10 slow reps",badge:"spine",tip:"Always end with this."}]},
+{name:"TUE",full:"Tuesday",focus:"Taekwondo + Leg Growth",icon:"🥋",type:"martial",quote:"A warrior trains the mind before the body.",timeAlloc:[{label:"Warm-Up",mins:"5",cls:"warmup"},{label:"TKD",mins:"20",cls:"main"},{label:"Leg Growth",mins:"12",cls:"leg-t"},{label:"Cooldown",mins:"8",cls:"cooldown"}],exercises:[{phase:"p-warmup",phaseLabel:"⏱ WARM-UP — 5 MIN"},{name:"High Knees",detail:"2×30s | 20s rest",badge:"cardio",tip:"Drive knees up. Gets hips loose for kicks."},{name:"Hip Circles + Leg Swings",detail:"1×60s each leg",badge:"cardio",tip:"Opens hip flexors for kicks."},{phase:"p-main",phaseLabel:"🥋 TAEKWONDO — 20 MIN"},{name:"Horse Stance Hold",detail:"4×45s | 55s rest",badge:"martial",tip:"Squat low, back STRAIGHT. Builds leg power."},{name:"Front Kick (Ap Chagi)",detail:"3×15 each leg | 55s rest",badge:"martial",tip:"Chamber knee, snap forward, retract fast."},{name:"Roundhouse Kick (Dollyo)",detail:"3×12 each leg | 55s rest",badge:"martial",tip:"Pivot on standing foot. Hip drives the kick."},{name:"Side Kick (Yeop Chagi)",detail:"3×10 each leg | 55s rest",badge:"martial",tip:"Chamber to side, thrust heel outward."},{name:"Shadow Fighting",detail:"2×90s | 60s rest",badge:"martial",tip:"Move freely. Kicks + punches. Light on feet."},{phase:"p-leg",phaseLabel:"🦵 LEG GROWTH — 12 MIN"},{name:"Dead Hang",detail:"3×30s | 30s rest",badge:"leg",tip:"Hang relaxed. Decompresses spine."},{name:"Jump Squats",detail:"3×12 | 45s rest",badge:"leg",tip:"Explosive. Stimulates growth hormone."},{name:"Calf Raises",detail:"3×20 | 30s rest",badge:"leg",tip:"Full range. Up on tiptoe."},{phase:"p-cooldown",phaseLabel:"🌊 COOLDOWN — 8 MIN"},{name:"Splits Progression",detail:"2×60s",badge:"leg",tip:"Improve 1cm weekly. Essential for kicks."},{name:"Hip Flexor Stretch",detail:"30s each side",badge:"spine",tip:"Push hips forward."},{name:"Cat-Cow Stretch",detail:"10 slow reps",badge:"spine",tip:"Always end with this."}]},
+{name:"WED",full:"Wednesday",focus:"Lower Body + Core",icon:"🦵",type:"strength",quote:"Strong legs carry a warrior into battle.",timeAlloc:[{label:"Warm-Up",mins:"5",cls:"warmup"},{label:"Lower Body",mins:"22",cls:"main"},{label:"Core",mins:"10",cls:"spine-t"},{label:"Cooldown",mins:"8",cls:"cooldown"}],exercises:[{phase:"p-warmup",phaseLabel:"⏱ WARM-UP — 5 MIN"},{name:"Leg Swings + Hip Circles",detail:"2 min",badge:"cardio",tip:"Loosen hips before squats."},{name:"Slow Squats",detail:"2×10",badge:"cardio",tip:"Feel the movement pattern."},{phase:"p-main",phaseLabel:"🦵 LOWER BODY — 22 MIN"},{name:"Bodyweight Squats",detail:"4×20 | 55s rest",badge:"strength",tip:"Knees over toes. Chest up. No rounding."},{name:"Reverse Lunges",detail:"3×12 each leg | 55s rest",badge:"strength",tip:"Step BACK — safer for spine."},{name:"Step-Up (chair)",detail:"3×15 each leg | 55s rest",badge:"strength",tip:"Drive through heel. Stand tall at top."},{name:"Glute Bridge",detail:"4×20 | 45s rest",badge:"spine",tip:"Squeeze glutes at top. Hold 2s."},{name:"Wall Sit",detail:"3×40s | 50s rest",badge:"strength",tip:"90 degree angle. Pure quad endurance."},{phase:"p-spine",phaseLabel:"💪 CORE — 10 MIN"},{name:"Plank Hold",detail:"4×40s | 50s rest",badge:"core",tip:"Flat back. Foundation of all stances."},{name:"Dead Bug",detail:"3×10 each side | 40s rest",badge:"spine",tip:"Lower back flat. Opposite arm+leg extend."},{phase:"p-cooldown",phaseLabel:"🌊 COOLDOWN — 8 MIN"},{name:"Hamstring Stretch",detail:"30s each leg",badge:"leg",tip:"One foot elevated. Lean forward."},{name:"Hip Flexor Stretch",detail:"30s each side",badge:"spine",tip:"Push hips forward."},{name:"Cat-Cow Stretch",detail:"10 slow reps",badge:"spine",tip:"Non-negotiable end."}]},
+{name:"THU",full:"Thursday",focus:"Katana + Balance",icon:"⚔️",type:"martial",quote:"The sword is an extension of the warrior's soul.",timeAlloc:[{label:"Warm-Up",mins:"5",cls:"warmup"},{label:"Katana",mins:"25",cls:"katana"},{label:"Balance",mins:"8",cls:"leg-t"},{label:"Cooldown",mins:"7",cls:"cooldown"}],exercises:[{phase:"p-warmup",phaseLabel:"⏱ WARM-UP — 5 MIN"},{name:"Wrist Circles + Arm Swings",detail:"2 min",badge:"katana",tip:"Warm wrist joints. Critical."},{name:"Footwork Drills",detail:"3 min",badge:"katana",tip:"Quick steps. Stay light."},{phase:"p-katana",phaseLabel:"🗡️ KATANA — 25 MIN"},{name:"Slow Kata",detail:"4×2 min | 60s rest",badge:"katana",tip:"Slow precise movements. Visualize sword path."},{name:"Core Rotation",detail:"3×20 each side | 45s rest",badge:"katana",tip:"Arms extended, rotate torso. Primary power."},{name:"Wrist Curls (bottle)",detail:"4×20 | 35s rest",badge:"katana",tip:"Primary grip strength builder."},{name:"Reverse Wrist Curls",detail:"4×15 | 35s rest",badge:"katana",tip:"Balances wrist strength."},{name:"Farmer's Carry",detail:"3×30s walk | 30s rest",badge:"katana",tip:"Heavy bottles. Grip + forearm + posture."},{phase:"p-leg",phaseLabel:"⚖️ BALANCE — 8 MIN"},{name:"Single Leg Balance",detail:"3×30s each leg | 20s rest",badge:"katana",tip:"Eyes forward, core tight."},{name:"Dead Hang",detail:"3×30s | 30s rest",badge:"leg",tip:"Grip + spine decompression."},{phase:"p-cooldown",phaseLabel:"🌊 COOLDOWN — 7 MIN"},{name:"Wrist Stretch",detail:"30s each direction",badge:"katana",tip:"Pull fingers back gently."},{name:"Shoulder Stretch",detail:"30s each side",badge:"katana",tip:"Pull arm across chest."},{name:"Cat-Cow Stretch",detail:"10 slow reps",badge:"spine",tip:"Always last."}]},
+{name:"FRI",full:"Friday",focus:"Full Warrior Circuit",icon:"🔥",type:"strength",quote:"Friday is where warriors are made — push through.",timeAlloc:[{label:"Warm-Up",mins:"5",cls:"warmup"},{label:"Circuit",mins:"25",cls:"main"},{label:"Spine+Leg",mins:"10",cls:"spine-t"},{label:"Cooldown",mins:"5",cls:"cooldown"}],exercises:[{phase:"p-warmup",phaseLabel:"⏱ WARM-UP — 5 MIN"},{name:"Jumping Jacks",detail:"2×30s",badge:"cardio",tip:"Full body warm-up."},{name:"Dynamic Stretches",detail:"2 min",badge:"cardio",tip:"Hip circles, arm swings, leg swings."},{phase:"p-main",phaseLabel:"🔥 CIRCUIT — 25 MIN"},{name:"Push-Up Variations",detail:"4 rounds: 8+8+6 | 80s rest",badge:"strength",tip:"Standard + wide + diamond per round."},{name:"Squat + Front Kick",detail:"3×15 combos | 70s rest",badge:"martial",tip:"Squat deep, rise and kick."},{name:"Mountain Climbers",detail:"3×30s | 40s rest",badge:"cardio",tip:"Fast knees, hips level."},{name:"Push-Up to T-Rotation",detail:"3×8 each side | 55s rest",badge:"strength",tip:"Push up, rotate, arm to ceiling."},{name:"Sprint in Place MAX",detail:"5×20s | 40s rest",badge:"cardio",tip:"Absolute maximum speed."},{phase:"p-spine",phaseLabel:"🦴 SPINE + LEG — 10 MIN"},{name:"Bird Dog",detail:"3×10 each side | 40s rest",badge:"spine",tip:"Core stability. Spine neutral."},{name:"Jump Squats",detail:"3×12 | 40s rest",badge:"leg",tip:"Explosive. Growth hormone stimulus."},{phase:"p-cooldown",phaseLabel:"🌊 COOLDOWN — 5 MIN"},{name:"Full Body Stretch",detail:"5 min — hold each 25s",badge:"spine",tip:"Hip flexors, hamstrings, chest. NEVER skip."}]},
+{name:"SAT",full:"Saturday",focus:"Combat + Leg Growth",icon:"🏆",type:"martial",quote:"Saturday is the test — show what you're made of.",timeAlloc:[{label:"Warm-Up",mins:"5",cls:"warmup"},{label:"Combat",mins:"22",cls:"main"},{label:"Leg Growth",mins:"12",cls:"leg-t"},{label:"Cooldown",mins:"6",cls:"cooldown"}],exercises:[{phase:"p-warmup",phaseLabel:"⏱ WARM-UP — 5 MIN"},{name:"Run in Place",detail:"3 min",badge:"cardio",tip:"High knees, pump arms."},{name:"Hip + Shoulder Openers",detail:"2 min",badge:"cardio",tip:"Circles, swings. Prepare for max output."},{phase:"p-main",phaseLabel:"🏆 COMBAT — 22 MIN"},{name:"Push-Ups + Kicks Superset",detail:"4 rounds: 10 push-ups + 10 kicks each | 85s rest",badge:"martial",tip:"No rest between push-ups and kicks."},{name:"Punching + Plank Circuit",detail:"3 rounds: 30s punch + 30s plank | 60s rest",badge:"martial",tip:"Sharp punches, neutral spine on plank."},{name:"Roundhouse MAX Speed",detail:"3×10 each leg | 55s rest",badge:"martial",tip:"Maximum speed. Chamber, snap, retract."},{name:"Shadow Fighting",detail:"3×2 min | 60s rest",badge:"martial",tip:"Full intensity. Move, kick, punch, flow."},{phase:"p-leg",phaseLabel:"🦵 LEG GROWTH — 12 MIN"},{name:"Dead Hang",detail:"3×30s | 30s rest",badge:"leg",tip:"Spine decompression. Height maximizer."},{name:"Splits Progression",detail:"2×60s",badge:"leg",tip:"Improve 1cm per week."},{name:"Calf Raises + Tippy Toe Walk",detail:"3×20 + 20s walk | 30s rest",badge:"leg",tip:"Full calf development."},{phase:"p-cooldown",phaseLabel:"🌊 COOLDOWN — 6 MIN"},{name:"Full Body Cooldown",detail:"6 min — hold each 30s",badge:"spine",tip:"Hip flexors, hamstrings, chest, cat-cow. NEVER skip."}]},
+{name:"SUN",full:"Sunday",focus:"Rest & Recovery",icon:"🌙",type:"rest",quote:"Rest is not weakness. It is part of the warrior's discipline.",exercises:[]}
+];
+
+// STATE — localStorage only, no external dependencies
+let state={streak:0,totalDone:0,spineScore:0,xp:0,completedDays:[],spineCompletedDays:[],legCompletedDays:[],katanaCompletedDays:[],checkedExercises:{},checkedSpine:[],checkedLeg:[],checkedKatana:[],activeDay:new Date().getDay()===0?6:new Date().getDay()-1};
+let timers={main:{s:0,running:false,iv:null},spine:{s:0,running:false,iv:null},leg:{s:0,running:false,iv:null},katana:{s:0,running:false,iv:null}};
+
+function save(){try{localStorage.setItem('wv3',JSON.stringify(state));}catch(e){}}
+function load(){try{const s=localStorage.getItem('wv3');if(s){const d=JSON.parse(s);Object.assign(state,d);}}catch(e){}}
+
+function switchPanel(p){
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('panel-'+p).classList.add('active');
+  const tabs=document.querySelectorAll('.nav-tab');
+  const idx={workout:0,spine:1,leg:2,katana:3,posture:4}[p];
+  if(tabs[idx])tabs[idx].classList.add('active');
+  if(p==='spine')buildSpinePanel();
+  if(p==='leg')buildLegPanel();
+  if(p==='katana')buildKatanaPanel();
+  if(p==='posture')buildPosturePanel();
+}
+
+function updateStats(){
+  document.getElementById('streakCount').textContent=state.streak;
+  document.getElementById('totalDone').textContent=state.totalDone;
+  document.getElementById('spineScore').textContent=state.spineScore;
+  document.getElementById('xpCount').textContent=state.xp;
+}
+
+function buildWeeklyGrid(){
+  const g=document.getElementById('weeklyGrid');g.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const c=document.createElement('div');
+    c.className='week-cell'+(i===state.activeDay?' today':'')+(state.completedDays.includes(i)?' completed':'');
+    c.innerHTML=`<span class="day-dot">${d.icon}</span>${d.name}`;
+    c.onclick=()=>switchDay(i);
+    g.appendChild(c);
+  });
+}
+
+function buildTabs(){
+  const t=document.getElementById('dayTabs');t.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const b=document.createElement('button');
+    b.className='day-tab'+(d.type==='rest'?' rest-tab':'')+(i===state.activeDay?' active':'');
+    b.textContent=d.name+' — '+d.focus;
+    b.onclick=()=>switchDay(i);
+    t.appendChild(b);
+  });
+}
+
+function switchDay(i){state.activeDay=i;buildTabs();buildWeeklyGrid();buildWorkout();}
+
+function buildWorkout(){
+  const content=document.getElementById('workoutContent');
+  const day=DAYS[state.activeDay];const i=state.activeDay;
+  if(day.type==='rest'){
+    content.innerHTML=`<div class="rest-card"><div class="rest-emoji">🌙</div><div class="rest-title">Rest & Recovery</div><div class="rest-text">"${day.quote}"<br><br>Still do <strong style="color:var(--spine)">Spine Fix</strong> and <strong style="color:var(--leg)">Leg Growth</strong> — light enough for rest day.</div><div class="rest-tips"><div class="rest-tip"><span>💧</span>3L water</div><div class="rest-tip"><span>😴</span>Sleep 10:30 PM</div><div class="rest-tip"><span>🌅</span>20 min sunlight</div><div class="rest-tip"><span>🥛</span>Protein + calcium</div><div class="rest-tip"><span>🦷</span>Mew all day</div><div class="rest-tip"><span>📖</span>Study Japanese</div></div></div>`;
+    return;
+  }
+  const realEx=day.exercises.filter(e=>!e.phase);
+  const checked=state.checkedExercises[i]||[];
+  const progress=realEx.length?Math.round((checked.length/realEx.length)*100):0;
+  const allDone=checked.length===realEx.length;
+  const timeHTML=day.timeAlloc?`<div class="time-alloc">${day.timeAlloc.map(t=>`<div class="time-block ${t.cls}"><div class="t-mins">${t.mins}m</div><div class="t-label">${t.label}</div></div>`).join('')}</div>`:'';
+  let exIdx=0;
+  const exHTML=day.exercises.map(ex=>{
+    if(ex.phase)return`<div class="phase-label ${ex.phase}">${ex.phaseLabel}</div>`;
+    const j=exIdx++;const isDone=checked.includes(j);
+    const cc=ex.badge==='spine'?'spine-card':ex.badge==='katana'?'katana-card':ex.badge==='leg'?'leg-card':'';
+    return`<div class="exercise-card ${cc} ${isDone?'done':''}" onclick="toggleEx(${i},${j})"><div class="ex-check">${isDone?'✓':''}</div><div class="ex-info"><div class="ex-name">${ex.name}</div><div class="ex-detail">${ex.detail}</div><div class="ex-tip">💡 ${ex.tip}</div></div><span class="ex-badge badge-${ex.badge}">${ex.badge}</span></div>`;
+  }).join('');
+  content.innerHTML=`<div class="quote-box">"${day.quote}"</div><div class="section-header"><div class="section-icon">${day.icon}</div><div><div class="section-title">${day.full} — ${day.focus}</div><div class="section-subtitle">${realEx.length} exercises · 45 min · No equipment</div></div></div>${timeHTML}<div class="progress-section"><div class="progress-label"><span>Today's Progress</span><span>${progress}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div></div><div class="exercise-list">${exHTML}</div><div class="timer-section"><div class="timer-label">⏱ Rest Timer</div><div class="timer-display" id="timerDisplay">00:00</div><div class="timer-btns"><button class="btn btn-blue" onclick="setT('main',45)">45s</button><button class="btn btn-blue" onclick="setT('main',60)">60s</button><button class="btn btn-blue" onclick="setT('main',90)">90s</button><button class="btn btn-primary" onclick="toggleT('main')" id="mainTimerBtn">START</button><button class="btn btn-secondary" onclick="resetT('main')">RESET</button></div></div><button class="complete-day-btn" ${allDone?'disabled':''} onclick="completeDay(${i})">${allDone?'✅ DAY COMPLETE — WARRIOR!':'⚔️ MARK DAY COMPLETE'}</button>`;
+}
+
+function toggleEx(di,ei){
+  if(!state.checkedExercises[di])state.checkedExercises[di]=[];
+  const arr=state.checkedExercises[di];const pos=arr.indexOf(ei);
+  if(pos>-1)arr.splice(pos,1);else arr.push(ei);
+  save();buildWorkout();
+}
+
+function completeDay(di){
+  if(!state.completedDays.includes(di)){
+    state.completedDays.push(di);state.totalDone++;state.streak++;state.xp+=100;
+    save();updateStats();buildWeeklyGrid();buildWorkout();
+    alert('🔥 DAY COMPLETE! +100 XP! Streak: '+state.streak+' days!');
+  }
+}
+
+function buildSpinePanel(){
+  const checked=state.checkedSpine||[];const p=Math.round((checked.length/SPINE_EX.length)*100);
+  document.getElementById('spineExList').innerHTML=SPINE_EX.map((ex,j)=>{const isDone=checked.includes(j);return`<div class="exercise-card spine-card ${isDone?'done':''}" onclick="toggleSpineEx(${j})"><div class="ex-check">${isDone?'✓':''}</div><div class="ex-info"><div class="ex-name">${ex.name}</div><div class="ex-detail">${ex.detail}</div><div class="ex-tip">💡 ${ex.tip}</div></div><span class="ex-badge badge-spine">spine</span></div>`;}).join('');
+  document.getElementById('spineProgressPct').textContent=p+'%';document.getElementById('spineProgressFill').style.width=p+'%';
+  const btn=document.getElementById('completeSpineBtn');const allDone=checked.length===SPINE_EX.length;btn.disabled=allDone;btn.textContent=allDone?'✅ SPINE COMPLETE!':'🦴 MARK SPINE COMPLETE';
+}
+function toggleSpineEx(j){if(!state.checkedSpine)state.checkedSpine=[];const pos=state.checkedSpine.indexOf(j);if(pos>-1)state.checkedSpine.splice(pos,1);else state.checkedSpine.push(j);save();buildSpinePanel();}
+function completeSpine(){const today=new Date().toDateString();if(!state.spineCompletedDays)state.spineCompletedDays=[];if(!state.spineCompletedDays.includes(today)){state.spineCompletedDays.push(today);state.spineScore++;state.xp+=50;save();updateStats();alert('🦴 Spine done! +50 XP!');}}
+
+function buildLegPanel(){
+  const checked=state.checkedLeg||[];const p=Math.round((checked.length/LEG_EX.length)*100);
+  document.getElementById('legExList').innerHTML=LEG_EX.map((ex,j)=>{const isDone=checked.includes(j);return`<div class="exercise-card leg-card ${isDone?'done':''}" onclick="toggleLegEx(${j})"><div class="ex-check">${isDone?'✓':''}</div><div class="ex-info"><div class="ex-name">${ex.name}</div><div class="ex-detail">${ex.detail}</div><div class="ex-tip">💡 ${ex.tip}</div></div><span class="ex-badge badge-leg">leg</span></div>`;}).join('');
+  document.getElementById('legProgressPct').textContent=p+'%';document.getElementById('legProgressFill').style.width=p+'%';
+  const btn=document.getElementById('completeLegBtn');const allDone=checked.length===LEG_EX.length;btn.disabled=allDone;btn.textContent=allDone?'✅ LEG COMPLETE!':'🦵 MARK LEG COMPLETE';
+}
+function toggleLegEx(j){if(!state.checkedLeg)state.checkedLeg=[];const pos=state.checkedLeg.indexOf(j);if(pos>-1)state.checkedLeg.splice(pos,1);else state.checkedLeg.push(j);save();buildLegPanel();}
+function completeLeg(){const today=new Date().toDateString();if(!state.legCompletedDays)state.legCompletedDays=[];if(!state.legCompletedDays.includes(today)){state.legCompletedDays.push(today);state.xp+=40;save();updateStats();alert('🦵 Leg done! +40 XP! Sleep by 10:30 PM!');}}
+
+function buildKatanaPanel(){
+  const checked=state.checkedKatana||[];const p=Math.round((checked.length/KATANA_EX.length)*100);
+  document.getElementById('katanaExList').innerHTML=KATANA_EX.map((ex,j)=>{const isDone=checked.includes(j);return`<div class="exercise-card katana-card ${isDone?'done':''}" onclick="toggleKatanaEx(${j})"><div class="ex-check">${isDone?'✓':''}</div><div class="ex-info"><div class="ex-name">${ex.name}</div><div class="ex-detail">${ex.detail}</div><div class="ex-tip">💡 ${ex.tip}</div></div><span class="ex-badge badge-katana">katana</span></div>`;}).join('');
+  document.getElementById('katanaProgressPct').textContent=p+'%';document.getElementById('katanaProgressFill').style.width=p+'%';
+  const btn=document.getElementById('completeKatanaBtn');const allDone=checked.length===KATANA_EX.length;btn.disabled=allDone;btn.textContent=allDone?'✅ KATANA COMPLETE!':'🗡️ MARK KATANA COMPLETE';
+}
+function toggleKatanaEx(j){if(!state.checkedKatana)state.checkedKatana=[];const pos=state.checkedKatana.indexOf(j);if(pos>-1)state.checkedKatana.splice(pos,1);else state.checkedKatana.push(j);save();buildKatanaPanel();}
+function completeKatana(){const today=new Date().toDateString();if(!state.katanaCompletedDays)state.katanaCompletedDays=[];if(!state.katanaCompletedDays.includes(today)){state.katanaCompletedDays.push(today);state.xp+=60;save();updateStats();alert('🗡️ Katana done! +60 XP!');}}
+
+function buildPosturePanel(){document.getElementById('postureList').innerHTML=POSTURE_RULES.map(r=>`<div class="posture-rule"><div class="posture-rule-title">${r.icon} ${r.title}</div><p>${r.rule}</p></div>`).join('');}
+
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function setT(key,s){const t=timers[key];clearInterval(t.iv);t.running=false;t.s=s;const displayId=key==='main'?'timerDisplay':key+'TimerDisplay';const btnId=key==='main'?'mainTimerBtn':key+'TimerBtn';const d=document.getElementById(displayId);const b=document.getElementById(btnId);if(d){d.textContent=fmt(s);d.classList.remove('running');}if(b)b.textContent='START';}
+function toggleT(key){const t=timers[key];const displayId=key==='main'?'timerDisplay':key+'TimerDisplay';const btnId=key==='main'?'mainTimerBtn':key+'TimerBtn';const d=document.getElementById(displayId);const b=document.getElementById(btnId);if(t.running){clearInterval(t.iv);t.running=false;if(b)b.textContent='START';if(d)d.classList.remove('running');}else{if(t.s<=0)t.s=60;t.running=true;if(b)b.textContent='PAUSE';if(d)d.classList.add('running');t.iv=setInterval(()=>{t.s--;const dd=document.getElementById(displayId);if(dd)dd.textContent=fmt(t.s);if(t.s<=0){clearInterval(t.iv);t.running=false;const bb=document.getElementById(btnId);if(bb)bb.textContent='START';if(dd){dd.classList.remove('running');dd.textContent='GO! 💪';}}},1000);}}
+function resetT(key){const t=timers[key];clearInterval(t.iv);t.running=false;t.s=0;const displayId=key==='main'?'timerDisplay':key+'TimerDisplay';const btnId=key==='main'?'mainTimerBtn':key+'TimerBtn';const d=document.getElementById(displayId);const b=document.getElementById(btnId);if(d){d.textContent='00:00';d.classList.remove('running');}if(b)b.textContent='START';}
+
+load();updateStats();buildWeeklyGrid();buildTabs();buildWorkout();
+</script>
+</body>
+</html>
